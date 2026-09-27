@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}500 - Server Error | MarketNest{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center my-auto">
+    <div class="max-w-500 mx-auto py-5">
+        <div class="brand-logo-icon bg-danger mx-auto mb-4" style="width: 72px; height: 72px; font-size: 2.2rem;">
+            <i class="bi bi-exclamation-triangle text-white"></i>
+        </div>
+        <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-1 fw-bold mb-2">Error 500</span>
+        <h1 class="display-5 fw-bold text-slate-900 mb-3">Something went wrong</h1>
+        <p class="text-muted mb-4">
+            We experienced an unexpected server issue. Our engineering team has been notified.
+        </p>
+        <div class="d-flex justify-content-center gap-2">
+            <a href="{% url 'marketplace:home' %}" class="btn btn-teal rounded-pill px-4 fw-semibold">
+                Back to Home
+            </a>
+            <a href="{% url 'marketplace:contact' %}" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold">
+                Contact Support
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

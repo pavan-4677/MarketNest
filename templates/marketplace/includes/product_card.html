@@ -1,0 +1,76 @@
+{% load static %}
+<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 d-flex">
+    <div class="product-card w-100">
+        <!-- Image & Floating Favorite -->
+        <div class="product-card-img-wrapper">
+            <a href="{{ product.get_absolute_url }}" class="d-block w-100 h-100">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-card-img" loading="lazy">
+                {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-slate-200 text-muted">
+                        <i class="bi bi-image fs-1"></i>
+                    </div>
+                {% endif %}
+            </a>
+
+            <!-- Condition Badge -->
+            <span class="badge position-absolute top-0 start-0 m-2 {{ product.condition_badge_class }} rounded-pill px-2 py-1 shadow-sm" style="font-size: 0.72rem; z-index: 2;">
+                {{ product.get_condition_display }}
+            </span>
+
+            <!-- Favorite Button -->
+            <button type="button" 
+                    class="product-favorite-btn {% if product.id in user_favorite_ids %}active{% endif %}" 
+                    data-product-id="{{ product.id }}"
+                    data-url="{% url 'marketplace:toggle_favorite' pk=product.id %}"
+                    title="{% if product.id in user_favorite_ids %}Remove from favorites{% else %}Add to favorites{% endif %}"
+                    aria-label="Favorite">
+                <i class="bi {% if product.id in user_favorite_ids %}bi-heart-fill text-danger{% else %}bi-heart{% endif %}"></i>
+            </button>
+        </div>
+
+        <!-- Card Body -->
+        <div class="product-card-body">
+            <!-- Category and Date -->
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="badge bg-slate-100 text-slate-600 rounded-pill small fw-medium">
+                    <i class="bi {{ product.category.icon|default:'bi-tag' }} me-1 text-teal"></i>{{ product.category.name|default:"General" }}
+                </span>
+                <span class="text-slate-400 small" style="font-size: 0.75rem;">
+                    {{ product.created_at|date:"M d" }}
+                </span>
+            </div>
+
+            <!-- Price -->
+            <div class="product-price my-1">
+                Rs. {{ product.price|floatformat:"0" }}
+            </div>
+
+            <!-- Title -->
+            <h3 class="product-title" title="{{ product.title }}">
+                <a href="{{ product.get_absolute_url }}" class="text-slate-800 text-decoration-none hover-teal">
+                    {{ product.title }}
+                </a>
+            </h3>
+
+            <!-- Location -->
+            <div class="product-location mb-3">
+                <i class="bi bi-geo-alt-fill text-teal"></i>
+                <span class="text-truncate">{{ product.location }}</span>
+            </div>
+
+            <!-- Card Footer: Seller & Button -->
+            <div class="product-seller-info d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="{{ product.seller.profile.get_avatar_url }}" alt="{{ product.seller.username }}" class="rounded-circle" width="24" height="24" style="object-fit: cover;">
+                    <a href="{% url 'marketplace:seller_profile' username=product.seller.username %}" class="text-slate-600 text-decoration-none small text-truncate max-w-100 fw-medium">
+                        {{ product.seller.first_name|default:product.seller.username }}
+                    </a>
+                </div>
+                <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-teal-outline rounded-pill px-3 py-1" style="font-size: 0.8rem;">
+                    Details
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

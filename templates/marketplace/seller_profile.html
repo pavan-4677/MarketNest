@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ seller.get_full_name|default:seller.username }}'s Listings | MarketNest{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'marketplace:home' %}" class="text-teal text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'marketplace:products' %}" class="text-teal text-decoration-none">Browse</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ seller.username }}</li>
+        </ol>
+    </nav>
+
+    <!-- Seller Hero Header -->
+    <div class="card border border-slate-200 rounded-4 p-4 p-md-5 bg-white shadow-sm mb-4">
+        <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4">
+            <img src="{{ seller.profile.get_avatar_url }}" alt="{{ seller.username }}" class="rounded-circle shadow" width="100" height="100" style="object-fit: cover;">
+            <div class="text-center text-md-start flex-grow-1">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
+                    <h1 class="h3 fw-bold text-slate-900 mb-0">{{ seller.get_full_name|default:seller.username }}</h1>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                        <i class="bi bi-shield-check me-1"></i>Verified Member
+                    </span>
+                </div>
+                <div class="text-muted small mb-3">
+                    <span><i class="bi bi-geo-alt-fill text-teal me-1"></i>{{ seller.profile.location|default:"City Center" }}</span>
+                    <span class="mx-2">&bull;</span>
+                    <span><i class="bi bi-calendar3 me-1"></i>Joined {{ seller.date_joined|date:"F Y" }}</span>
+                </div>
+
+                {% if seller.profile.bio %}
+                <p class="text-slate-600 small max-w-700 mb-3">
+                    {{ seller.profile.bio }}
+                </p>
+                {% endif %}
+
+                <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-3 small text-muted">
+                    <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                        <i class="bi bi-grid-fill text-teal me-1"></i>{{ listings_count }} Active Listing{{ listings_count|pluralize }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seller's Listings -->
+    <div class="mb-4">
+        <h3 class="h4 fw-bold text-slate-900 mb-3">Listings by {{ seller.first_name|default:seller.username }}</h3>
+        <div class="row g-4">
+            {% for product in listings %}
+                {% include 'marketplace/includes/product_card.html' with product=product %}
+            {% empty %}
+                <div class="col-12 py-5 text-center text-muted">
+                    <i class="bi bi-box-seam display-6 d-block mb-2 text-muted"></i>
+                    <p>This seller does not have any active listings right now.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

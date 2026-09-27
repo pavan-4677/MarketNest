@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact &amp; Support | MarketNest{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center max-w-600 mx-auto mb-5">
+        <span class="badge bg-teal-subtle text-teal rounded-pill px-3 py-1 fw-semibold mb-2">We're Here For You</span>
+        <h1 class="display-6 fw-bold text-slate-900 mb-2">Contact MarketNest Support</h1>
+        <p class="text-muted small">Have questions, feedback, or need help with a transaction? Send our community team a message.</p>
+    </div>
+
+    <div class="row g-5">
+        <!-- Contact Form -->
+        <div class="col-lg-7">
+            <div class="card border border-slate-200 rounded-4 p-4 p-md-5 bg-white shadow-sm">
+                <h4 class="fw-bold text-slate-900 mb-4">Send Us a Message</h4>
+                
+                <form method="POST" action="{% url 'marketplace:contact' %}">
+                    {% csrf_token %}
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label">Your Name *</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label">Email Address *</label>
+                            {{ form.email }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Subject *</label>
+                        {{ form.subject }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Message *</label>
+                        {{ form.message }}
+                    </div>
+
+                    <button type="submit" class="btn btn-teal rounded-pill px-5 fw-bold py-2 shadow-sm">
+                        <i class="bi bi-send-fill me-2"></i>Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Contact Info & FAQs -->
+        <div class="col-lg-5">
+            <!-- Contact Card -->
+            <div class="card border border-slate-200 rounded-4 p-4 bg-white shadow-sm mb-4">
+                <h5 class="fw-bold text-slate-900 mb-3">Community Hub</h5>
+                <ul class="list-unstyled d-flex flex-column gap-3 small text-slate-600 mb-0">
+                    <li class="d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-light text-teal rounded-3 p-2" style="width: 40px; height: 40px; font-size: 1.2rem;">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark">Email Support</div>
+                            <div>support@marketnest.com</div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-light text-teal rounded-3 p-2" style="width: 40px; height: 40px; font-size: 1.2rem;">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark">Response Time</div>
+                            <div>Typically responds within 2-4 hours</div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center gap-3">
+                        <div class="stat-icon bg-light text-teal rounded-3 p-2" style="width: 40px; height: 40px; font-size: 1.2rem;">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark">Community Headquarters</div>
+                            <div>MarketNest Tech Hub, Indiranagar, Bengaluru, India</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- FAQs Accordion -->
+            <div class="card border border-slate-200 rounded-4 p-4 bg-white shadow-sm">
+                <h5 class="fw-bold text-slate-900 mb-3">Frequently Asked Questions</h5>
+                <div class="accordion accordion-flush" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-semibold text-dark small" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Is MarketNest free to use?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body small text-muted">
+                                Yes! Posting listings, browsing products, and chatting with buyers/sellers is 100% free with zero commission fees.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-semibold text-dark small" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                How do I receive payments?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body small text-muted">
+                                Payments are made directly between buyer and seller during physical handoff via UPI (Google Pay, PhonePe, Paytm) or cash.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-semibold text-dark small" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                What if a seller doesn't respond?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body small text-muted">
+                                Sellers usually respond within a few hours. If a listing is inactive or the seller doesn't reply, browse similar items or contact support.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

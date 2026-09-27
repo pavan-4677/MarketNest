@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Account | MarketNest{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10 col-12">
+            <div class="auth-card">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <div class="brand-logo-icon mx-auto mb-3" style="width: 48px; height: 48px; font-size: 1.5rem;">
+                        <i class="bi bi-nest text-white"></i>
+                    </div>
+                    <h2 class="fw-bold text-slate-900 mb-1">Join MarketNest</h2>
+                    <p class="text-muted small">Connect with your local community to buy and sell safely</p>
+                </div>
+
+                <!-- Registration Form -->
+                <form method="POST" action="{% url 'marketplace:register' %}">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger py-2 px-3 small rounded-3 mb-3">
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label">First Name *</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.first_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label">Last Name *</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.last_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Username *</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                        <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email Address *</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <label class="form-label">Password *</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                            <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label">Confirm Password *</label>
+                            {{ form.confirm_password }}
+                            {% if form.confirm_password.errors %}
+                            <div class="text-danger small mt-1">{{ form.confirm_password.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-teal w-100 rounded-pill py-2 fw-bold mb-3 shadow-sm">
+                        Create Account
+                    </button>
+                </form>
+
+                <div class="text-center small text-muted">
+                    Already registered? 
+                    <a href="{% url 'marketplace:login' %}" class="text-teal fw-semibold text-decoration-none">
+                        Sign In here
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

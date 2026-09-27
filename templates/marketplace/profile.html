@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile Settings | MarketNest{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'marketplace:home' %}" class="text-teal text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'marketplace:dashboard' %}" class="text-teal text-decoration-none">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Profile Settings</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Left: Profile Edit Form -->
+        <div class="col-lg-7">
+            <div class="card border border-slate-200 rounded-4 p-4 p-md-5 bg-white shadow-sm">
+                <div class="mb-4 pb-3 border-bottom d-flex align-items-center justify-content-between">
+                    <div>
+                        <h1 class="h3 fw-bold text-slate-900 mb-1">Profile Settings</h1>
+                        <p class="text-muted small mb-0">Update your community profile and contact information.</p>
+                    </div>
+                    <a href="{% url 'marketplace:seller_profile' username=user.username %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        View Public Profile &rarr;
+                    </a>
+                </div>
+
+                <form method="POST" action="{% url 'marketplace:profile' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Avatar Box -->
+                    <div class="d-flex align-items-center gap-4 mb-4 p-3 bg-light rounded-4">
+                        <img src="{{ profile.get_avatar_url }}" alt="{{ user.username }}" class="rounded-circle shadow-sm" width="80" height="80" style="object-fit: cover;">
+                        <div>
+                            <label class="form-label fw-bold text-dark mb-1">Profile Photo</label>
+                            {{ form.profile_image }}
+                            <div class="form-text small">Upload a clean square image (JPG, PNG, WEBP).</div>
+                            {% if form.profile_image.errors %}
+                            <div class="text-danger small mt-1">{{ form.profile_image.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Names -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label">First Name</label>
+                            {{ form.first_name }}
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label">Last Name</label>
+                            {{ form.last_name }}
+                        </div>
+                    </div>
+
+                    <!-- Email & Phone -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label">Email Address</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label">Phone / WhatsApp Number</label>
+                            {{ form.phone }}
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="mb-3">
+                        <label class="form-label">Location / Neighborhood</label>
+                        {{ form.location }}
+                        <div class="form-text small">e.g., Indiranagar, Bengaluru or Bandra West, Mumbai</div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="mb-4">
+                        <label class="form-label">Bio / About You</label>
+                        {{ form.bio }}
+                        <div class="form-text small">Introduce yourself to neighbors and buyers.</div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'marketplace:dashboard' %}" class="btn btn-light rounded-pill px-4">Cancel</a>
+                        <button type="submit" class="btn btn-teal rounded-pill px-5 fw-bold shadow-sm">
+                            Save Profile
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: Profile Preview & Summary -->
+        <div class="col-lg-5">
+            <div class="card border border-slate-200 rounded-4 p-4 bg-white shadow-sm mb-4 text-center">
+                <img src="{{ profile.get_avatar_url }}" alt="{{ user.username }}" class="rounded-circle shadow mx-auto mb-3" width="96" height="96" style="object-fit: cover;">
+                <h4 class="fw-bold text-slate-900 mb-1">{{ user.get_full_name|default:user.username }}</h4>
+                <div class="text-muted small mb-3">@{{ user.username }} &bull; Member since {{ user.date_joined|date:"M Y" }}</div>
+                
+                {% if profile.bio %}
+                <p class="small text-slate-600 mb-3 px-3 italic">"{{ profile.bio }}"</p>
+                {% endif %}
+
+                <div class="p-3 bg-light rounded-3 d-flex justify-content-around text-center mb-3">
+                    <div>
+                        <div class="fw-bold fs-5 text-dark">{{ user_listings.count }}</div>
+                        <div class="small text-muted">Listings</div>
+                    </div>
+                    <div class="border-end"></div>
+                    <div>
+                        <div class="fw-bold fs-5 text-dark">{{ user.profile.location|default:"City Center" }}</div>
+                        <div class="small text-muted">Area</div>
+                    </div>
+                </div>
+
+                <div class="text-start small text-muted">
+                    <div class="mb-1"><i class="bi bi-envelope text-teal me-2"></i>{{ user.email }}</div>
+                    {% if profile.phone %}
+                    <div><i class="bi bi-telephone text-teal me-2"></i>{{ profile.phone }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Trust Badge Box -->
+            <div class="card border border-teal-subtle bg-teal-subtle rounded-4 p-3 shadow-none">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-patch-check-fill text-teal display-6"></i>
+                    <div>
+                        <div class="fw-bold text-teal">MarketNest Verified Community Member</div>
+                        <div class="small text-slate-600">Your profile is visible to other neighborhood buyers when you post or inquire about listings.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

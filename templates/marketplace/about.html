@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us | MarketNest - Buy Local. Sell Smart.{% endblock %}
+
+{% block content %}
+<!-- About Hero -->
+<section class="py-5 bg-white border-bottom">
+    <div class="container text-center py-4">
+        <span class="badge bg-teal-subtle text-teal rounded-pill px-3 py-1 fw-semibold mb-2">Our Mission</span>
+        <h1 class="display-5 fw-bold text-slate-900 mb-3">Reimagining Local Commerce</h1>
+        <p class="lead text-muted max-w-700 mx-auto">
+            MarketNest was built on a simple yet transformative belief: the best marketplace is the one right outside your front door.
+        </p>
+    </div>
+</section>
+
+<!-- Story & Core Pillars -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center mb-5">
+            <div class="col-lg-6">
+                <span class="text-teal text-uppercase fw-bold small letter-spacing-1">Our Journey</span>
+                <h2 class="h2 fw-bold text-slate-900 mb-3">Buy Local. Sell Smart.</h2>
+                <p class="text-slate-600 lh-lg mb-3">
+                    In a world of impersonal e-commerce algorithms and cross-country shipping delays, MarketNest returns commerce to its roots: genuine neighborhood connections. Whether you're upgrading your tech, redecorating your apartment, or finding new homes for treasured books, MarketNest empowers communities to buy and sell pre-loved goods safely.
+                </p>
+                <p class="text-slate-600 lh-lg mb-4">
+                    By keeping transactions local, we eliminate exorbitant platform cuts, minimize wasteful packaging, and foster meaningful neighborhood relationships built on mutual trust.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'marketplace:products' %}" class="btn btn-teal rounded-pill px-4 fw-semibold">
+                        Browse Listings
+                    </a>
+                    <a href="{% url 'marketplace:create_listing' %}" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold">
+                        Start Selling
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="p-4 p-md-5 bg-white rounded-4 border shadow-sm">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="brand-logo-icon bg-teal">
+                            <i class="bi bi-nest text-white fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold text-dark mb-0">MarketNest Impact</h4>
+                            <span class="small text-muted">Empowering local communities</span>
+                        </div>
+                    </div>
+                    <div class="row g-3 text-center">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="h3 fw-bold text-teal mb-1">100%</div>
+                                <div class="small text-muted">Community Driven</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="h3 fw-bold text-teal mb-1">0%</div>
+                                <div class="small text-muted">Hidden Fees</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="h3 fw-bold text-teal mb-1">1000s</div>
+                                <div class="small text-muted">Items Rehomed</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="h3 fw-bold text-teal mb-1">24/7</div>
+                                <div class="small text-muted">Fraud Monitoring</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Our Core Values -->
+        <div class="text-center max-w-600 mx-auto mb-5">
+            <span class="text-teal text-uppercase fw-bold small letter-spacing-1">Values</span>
+            <h2 class="h2 fw-bold text-slate-900 mt-1">What Guides MarketNest</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 bg-white rounded-4 p-4 shadow-sm text-center">
+                    <div class="stat-icon bg-teal-subtle text-teal mx-auto mb-3">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    <h5 class="fw-bold text-slate-900 mb-2">Trust &amp; Transparency</h5>
+                    <p class="text-slate-600 small mb-0">Every member profile is verified. Clear item conditions, transparent pricing, and public neighborhood exchanges create safe transactions.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 bg-white rounded-4 p-4 shadow-sm text-center">
+                    <div class="stat-icon bg-teal-subtle text-teal mx-auto mb-3">
+                        <i class="bi bi-recycle"></i>
+                    </div>
+                    <h5 class="fw-bold text-slate-900 mb-2">Sustainable Living</h5>
+                    <p class="text-slate-600 small mb-0">Extending product lifecycles reduces landfill burden and manufacturing demand. Smart circular economy starts at your doorstep.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 bg-white rounded-4 p-4 shadow-sm text-center">
+                    <div class="stat-icon bg-teal-subtle text-teal mx-auto mb-3">
+                        <i class="bi bi-heart-pulse-fill"></i>
+                    </div>
+                    <h5 class="fw-bold text-slate-900 mb-2">Community Connection</h5>
+                    <p class="text-slate-600 small mb-0">We bring neighbors together for friendly face-to-face exchanges, reviving local neighborhood trust and commerce.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

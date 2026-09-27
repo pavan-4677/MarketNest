@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}404 - Page Not Found | MarketNest{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center my-auto">
+    <div class="max-w-500 mx-auto py-5">
+        <div class="brand-logo-icon mx-auto mb-4" style="width: 72px; height: 72px; font-size: 2.2rem;">
+            <i class="bi bi-question-circle text-white"></i>
+        </div>
+        <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill px-3 py-1 fw-bold mb-2">Error 404</span>
+        <h1 class="display-5 fw-bold text-slate-900 mb-3">Oops! Page couldn't be found.</h1>
+        <p class="text-muted mb-4">
+            The listing, seller, or page you were looking for might have been sold, removed, or is temporarily unavailable.
+        </p>
+        <div class="d-flex justify-content-center gap-2">
+            <a href="{% url 'marketplace:home' %}" class="btn btn-teal rounded-pill px-4 fw-semibold">
+                <i class="bi bi-house-door-fill me-1"></i>Back to Home
+            </a>
+            <a href="{% url 'marketplace:products' %}" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold">
+                <i class="bi bi-search me-1"></i>Browse Listings
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

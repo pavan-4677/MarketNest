@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if query %}Search: {{ query }} | MarketNest{% elif selected_category %}{{ selected_category.name }} | MarketNest{% else %}Browse Listings | MarketNest{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb & Page Header -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="{% url 'marketplace:home' %}" class="text-teal text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Browse Products</li>
+            {% if selected_category %}
+            <li class="breadcrumb-item active" aria-current="page">{{ selected_category.name }}</li>
+            {% endif %}
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Left Column: Filter Sidebar -->
+        <aside class="col-lg-3 col-md-4">
+            <div class="card border border-slate-200 rounded-4 shadow-sm p-4 sticky-lg-top" style="top: 85px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-slate-900 mb-0">
+                        <i class="bi bi-funnel text-teal me-1"></i>Filters
+                    </h5>
+                    {% if query or category_slug or condition or location or min_price or max_price %}
+                    <a href="{% url 'marketplace:products' %}" class="small text-danger text-decoration-none fw-semibold">
+                        Reset All
+                    </a>
+                    {% endif %}
+                </div>
+
+                <form method="GET" action="{% url 'marketplace:products' %}">
+                    <!-- Retain current query if present -->
+                    {% if query %}
+                    <input type="hidden" name="q" value="{{ query }}">
+                    {% endif %}
+                    {% if sort_by %}
+                    <input type="hidden" name="sort" value="{{ sort_by }}">
+                    {% endif %}
+
+                    <!-- 1. Category Filter -->
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-select form-select-sm">
+                            <option value="">All Categories</option>
+                            {% for cat in categories %}
+                            <option value="{{ cat.slug }}" {% if category_slug == cat.slug %}selected{% endif %}>
+                                {{ cat.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- 2. Price Range Filter -->
+                    <div class="mb-3">
+                        <label class="form-label">Price Range (Rs.)</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="number" name="min_price" class="form-control form-control-sm" placeholder="Min" value="{{ min_price }}" min="0">
+                            <span class="text-muted">-</span>
+                            <input type="number" name="max_price" class="form-control form-control-sm" placeholder="Max" value="{{ max_price }}" min="0">
+                        </div>
+                    </div>
+
+                    <!-- 3. Condition Filter -->
+                    <div class="mb-3">
+                        <label class="form-label">Item Condition</label>
+                        <select name="condition" class="form-select form-select-sm">
+                            <option value="">Any Condition</option>
+                            {% for code, label in condition_choices %}
+                            <option value="{{ code }}" {% if condition == code %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- 4. Location Filter -->
+                    <div class="mb-4">
+                        <label class="form-label">Location / City</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-white"><i class="bi bi-geo-alt text-teal"></i></span>
+                            <input type="text" name="location" class="form-control" placeholder="e.g. Mumbai, Bengaluru" value="{{ location }}">
+                        </div>
+                    </div>
+
+                    <!-- Submit & Clear Buttons -->
+                    <button type="submit" class="btn btn-teal btn-sm w-100 rounded-pill fw-semibold py-2 mb-2">
+                        Apply Filters
+                    </button>
+                    {% if query or category_slug or condition or location or min_price or max_price %}
+                    <a href="{% url 'marketplace:products' %}" class="btn btn-light btn-sm w-100 rounded-pill border">
+                        Clear Search
+                    </a>
+                    {% endif %}
+                </form>
+            </div>
+        </aside>
+
+        <!-- Right Column: Results & Sorting -->
+        <main class="col-lg-9 col-md-8">
+            <!-- Search Results Summary & Sort Header -->
+            <div class="bg-white border rounded-4 p-3 mb-4 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 shadow-sm">
+                <div>
+                    <h1 class="h5 fw-bold text-slate-900 mb-1">
+                        {% if query %}
+                            Search results for "<span class="text-teal">{{ query }}</span>"
+                        {% elif selected_category %}
+                            {{ selected_category.name }}
+                        {% else %}
+                            All Marketplace Listings
+                        {% endif %}
+                    </h1>
+                    <p class="small text-muted mb-0">
+                        Showing <strong class="text-dark">{{ total_count }}</strong> product{{ total_count|pluralize }} found
+                    </p>
+                </div>
+
+                <!-- Sort Control -->
+                <div class="d-flex align-items-center gap-2">
+                    <label class="small text-muted text-nowrap mb-0">Sort by:</label>
+                    <form method="GET" action="{% url 'marketplace:products' %}" id="sortForm">
+                        {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+                        {% if category_slug %}<input type="hidden" name="category" value="{{ category_slug }}">{% endif %}
+                        {% if condition %}<input type="hidden" name="condition" value="{{ condition }}">{% endif %}
+                        {% if location %}<input type="hidden" name="location" value="{{ location }}">{% endif %}
+                        {% if min_price %}<input type="hidden" name="min_price" value="{{ min_price }}">{% endif %}
+                        {% if max_price %}<input type="hidden" name="max_price" value="{{ max_price }}">{% endif %}
+
+                        <select name="sort" class="form-select form-select-sm rounded-pill pe-4" onchange="this.form.submit()">
+                            <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest First</option>
+                            <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                            <option value="popular" {% if sort_by == 'popular' %}selected{% endif %}>Most Popular</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Active Filter Badges -->
+            {% if query or category_slug or condition or location or min_price or max_price %}
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                <span class="small text-muted">Active Filters:</span>
+                {% if query %}
+                    <span class="badge bg-slate-200 text-slate-800 rounded-pill py-2 px-3">
+                        Keyword: "{{ query }}"
+                    </span>
+                {% endif %}
+                {% if selected_category %}
+                    <span class="badge bg-teal-subtle text-teal rounded-pill py-2 px-3">
+                        Category: {{ selected_category.name }}
+                    </span>
+                {% endif %}
+                {% if condition %}
+                    <span class="badge bg-slate-200 text-slate-800 rounded-pill py-2 px-3">
+                        Condition: {{ condition }}
+                    </span>
+                {% endif %}
+                {% if location %}
+                    <span class="badge bg-slate-200 text-slate-800 rounded-pill py-2 px-3">
+                        Location: {{ location }}
+                    </span>
+                {% endif %}
+                {% if min_price or max_price %}
+                    <span class="badge bg-slate-200 text-slate-800 rounded-pill py-2 px-3">
+                        Price: Rs. {{ min_price|default:"0" }} - {{ max_price|default:"Any" }}
+                    </span>
+                {% endif %}
+                <a href="{% url 'marketplace:products' %}" class="small text-danger text-decoration-none ms-2">
+                    <i class="bi bi-x-circle me-1"></i>Clear all
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Products Grid -->
+            <div class="row g-4">
+                {% for product in products %}
+                    {% include 'marketplace/includes/product_card.html' with product=product %}
+                {% empty %}
+                    <!-- Empty State -->
+                    <div class="col-12 py-5 text-center">
+                        <div class="bg-white border rounded-4 p-5 max-w-500 mx-auto shadow-sm">
+                            <div class="icon-circle bg-slate-100 text-muted mx-auto mb-3" style="width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                                <i class="bi bi-search"></i>
+                            </div>
+                            <h4 class="fw-bold text-slate-900 mb-2">We couldn't find anything matching your search.</h4>
+                            <p class="text-muted small mb-4">Try checking for spelling errors, adjusting price filters, or searching with broader keywords.</p>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{% url 'marketplace:products' %}" class="btn btn-teal rounded-pill px-4">
+                                    Clear Search
+                                </a>
+                                <a href="{% url 'marketplace:create_listing' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                                    Sell an Item Instead
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <nav class="mt-5" aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link rounded-pill me-2 px-3" href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Previous">
+                            &laquo; Previous
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link rounded-pill me-2 px-3">&laquo; Previous</span>
+                    </li>
+                    {% endif %}
+
+                    {% for i in page_obj.paginator.page_range %}
+                        {% if page_obj.number == i %}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link rounded-circle mx-1" style="background-color: var(--brand-teal); border-color: var(--brand-teal);">{{ i }}</span>
+                        </li>
+                        {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link rounded-circle mx-1" href="?page={{ i }}{% if query_string %}&{{ query_string }}{% endif %}">{{ i }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link rounded-pill ms-2 px-3" href="?page={{ page_obj.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" aria-label="Next">
+                            Next &raquo;
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link rounded-pill ms-2 px-3">Next &raquo;</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </main>
+    </div>
+</div>
+{% endblock %}
