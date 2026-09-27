@@ -122,10 +122,6 @@ marketnest/
 ## 🚀 Quick Setup & Installation
 
 ### Step 1: Clone or Navigate to the Project
-```bash
-cd Project
-```
-
 ### Step 2: Create and Activate Virtual Environment
 ```bash
 # Windows
